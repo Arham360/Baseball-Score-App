@@ -9,10 +9,33 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
-      home: Scaffold()
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Today's Games".toUpperCase(),
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        body: HomePage(),
+      ),
     );
   }
 }
 
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ListView.builder(
+        padding: const EdgeInsets.all(10.0),
+        itemBuilder: (context, i) {
+          return ListTile(
+            title: new Text(i.toString()),
+          );
+        },
+      ),
+    );
+  }
+}
