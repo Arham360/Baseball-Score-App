@@ -37,13 +37,19 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         itemBuilder: (context, i) {
           return MatchCard(
-            new Game(homeTeam: Team(
-                "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
-                "WSH",
-                6),awayTeam: new Team(
-                "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
-                "HOU",
-                6), matchType: MatchType.Final )
+            game:Game(
+                homeTeam: Team(
+                  "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
+                  "WSH",
+                ),
+                homeTeamScore: 6,
+                awayTeam: new Team(
+                  "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
+                  "HOU",
+                ),
+                awayTeamScore: 2,
+                matchType: MatchType.Final),
+            isDetails: false,
           );
         },
       ),
@@ -53,8 +59,9 @@ class HomePage extends StatelessWidget {
 
 class MatchCard extends StatelessWidget {
   Game game;
+  bool isDetails;
 
-  MatchCard(this.game);
+  MatchCard({this.game, this.isDetails});
 
   @override
   Widget build(BuildContext context) {
@@ -72,9 +79,17 @@ class MatchCard extends StatelessWidget {
           child: Row(
             children: <Widget>[
               TeamCard(game.awayTeam),
+              Text(
+                game.awayTeamScore.toString(),
+                style: TextStyle(fontSize: 28),
+              ),
               Spacer(),
-              Text((game.matchType == MatchType.Final)?"FINAL" : "Regular"),
+              Text((game.matchType == MatchType.Final) ? "FINAL" : "Regular"),
               Spacer(),
+              Text(
+                game.homeTeamScore.toString(),
+                style: TextStyle(fontSize: 28),
+              ),
               TeamCard(game.homeTeam),
             ],
           ),
@@ -84,19 +99,17 @@ class MatchCard extends StatelessWidget {
   }
 
   _navigateToGameDetails(Game game, BuildContext context) {
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (BuildContext context) =>
-            MatchDetails(game)));
+   if(!isDetails){
+     Navigator.push(
+         context,
+         new MaterialPageRoute(
+             builder: (BuildContext context) => MatchDetails(game)));
+   }
   }
 }
 
-
 class TeamCard extends StatelessWidget {
   Team team;
-
-  //make this into an object
 
   TeamCard(this.team);
 
@@ -105,7 +118,8 @@ class TeamCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Hero(
-        tag: team.teamName,//this will cause issues if i have another card with same team name
+        tag: team.teamName,
+        //this will cause issues if i have another card with same team name
         child: Row(
           children: <Widget>[
             Column(
@@ -117,10 +131,6 @@ class TeamCard extends StatelessWidget {
                 Text(team.teamName)
               ],
             ),
-            Text(
-              team.teamScore.toString(),
-              style: TextStyle(fontSize: 28),
-            )
           ],
         ),
       ),
@@ -141,9 +151,7 @@ class MatchDetails extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: <Widget>[
-            MatchCard(game)
-          ],
+          children: <Widget>[MatchCard(game: game,)],
         ),
       ),
     );
