@@ -170,17 +170,18 @@ class MatchDetails extends StatefulWidget {
 }
 
 class _MatchDetailsState extends State<MatchDetails> {
-  List<DataColumn> column = [
-    DataColumn(
-      label: Text(""),
-    ),
-  ];
+  List<DataColumn> column = [];
 
   List<DataCell> home = [];
   List<DataCell> away = [];
 
   @override
   void initState() {
+    column.add(
+      DataColumn(
+        label: Text(""),
+      ),
+    );
     for (int i = 1; i < 10; i++) {
       column.add(
         DataColumn(
@@ -244,8 +245,6 @@ class _MatchDetailsState extends State<MatchDetails> {
         )
         .toList());
 
-    print(column.length);
-    print(home.length);
     super.initState();
   }
 
@@ -265,9 +264,12 @@ class _MatchDetailsState extends State<MatchDetails> {
             MatchCard(
               game: widget.game,
             ),
-            DataTable(
-              columns: column,
-              rows: [DataRow(cells: home), DataRow(cells: away)],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                columns: column,
+                rows: [DataRow(cells: home), DataRow(cells: away)],
+              ),
             )
           ],
         ),
