@@ -188,6 +188,21 @@ class _MatchDetailsState extends State<MatchDetails> {
         ),
       );
     }
+    column.add(
+      DataColumn(
+        label: Text("R"),
+      ),
+    );
+    column.add(
+      DataColumn(
+        label: Text("H"),
+      ),
+    );
+    column.add(
+      DataColumn(
+        label: Text("E"),
+      ),
+    );
 
     home.add(DataCell(Text(widget.game.homeTeam.teamName)));
     home.addAll(widget.game.homeInnings
@@ -199,9 +214,27 @@ class _MatchDetailsState extends State<MatchDetails> {
           ),
         )
         .toList());
+    home.addAll(widget.game.homeStats
+        .map(
+          (val) => DataCell(
+            Text(
+              val.toString(),
+            ),
+          ),
+        )
+        .toList());
 
     away.add(DataCell(Text(widget.game.awayTeam.teamName)));
     away.addAll(widget.game.awayInnings
+        .map(
+          (val) => DataCell(
+            Text(
+              val.toString(),
+            ),
+          ),
+        )
+        .toList());
+    away.addAll(widget.game.awayStats
         .map(
           (val) => DataCell(
             Text(

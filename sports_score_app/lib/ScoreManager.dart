@@ -27,6 +27,9 @@ class ScoreManager extends Model {
     List<int> homeInnings = List();
     List<int> awayInnings = List();
 
+    List<int> homeStats = List();
+    List<int> awayStats = List();
+
     for(var i in inningsData){
       //might be worth it to have a map to correspond with the innings values
       var homeRuns = i["home"]["runs"]??0;
@@ -34,6 +37,15 @@ class ScoreManager extends Model {
       homeInnings.add(homeRuns);
       awayInnings.add(awayRuns);
     }
+
+    var teamsData = inningsJson["teams"];
+    homeStats.add(teamsData["home"]["runs"]);
+    homeStats.add(teamsData["home"]["hits"]);
+    homeStats.add(teamsData["home"]["errors"]);
+
+    awayStats.add(teamsData["away"]["runs"]);
+    awayStats.add(teamsData["away"]["hits"]);
+    awayStats.add(teamsData["away"]["errors"]);
 
     print(homeInnings.toString());
     print(awayInnings.toString());
@@ -45,12 +57,14 @@ class ScoreManager extends Model {
         ),
         homeTeamScore: liveData["home"]["runs"] as int,
         homeInnings: homeInnings,
+        homeStats: homeStats,
         awayTeam: new Team(
           "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
           "HOU",
         ),
         awayTeamScore: liveData["away"]["runs"] as int,
         awayInnings: awayInnings,
+        awayStats: awayStats,
         matchType: MatchType.Final);
     //add into games and notify listeners
     games.add(game);
