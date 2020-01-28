@@ -6,12 +6,14 @@ class Game{
 
   Team homeTeam;
   int homeTeamScore;
+  List<int> homeInnings;
   Team awayTeam;
   int awayTeamScore;
+  List<int> awayInnings;
   MatchType matchType;
   Selected selected = Selected.AWAY;
 
-  Game({this.homeTeam,this.homeTeamScore, this.awayTeam, this.awayTeamScore, this.matchType,});
+  Game({this.homeTeam,this.homeTeamScore, this.homeInnings, this.awayTeam, this.awayTeamScore,this.awayInnings, this.matchType,});
 
 }
 

@@ -12,49 +12,67 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Today's Games".toUpperCase(),
-            style: TextStyle(color: Colors.white),
-          ),
-          centerTitle: true,
+    return ScopedModel(
+      model: ScoreManager(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.grey,
         ),
-        body: ScopedModel(model: ScoreManager(), child: HomePage()),
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              "Today's Games".toUpperCase(),
+              style: TextStyle(color: Colors.white),
+            ),
+            centerTitle: true,
+          ),
+          body: HomePage(),
+          floatingActionButton:
+              FloatingActionButton(onPressed: () => _refresh(context)),
+        ),
       ),
     );
   }
+
+  _refresh(context) async {
+    await ScopedModel.of<ScoreManager>(context).populateGames();
+  }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    asyncPopulate();
+  }
+
+  asyncPopulate() async {
+    await ScopedModel.of<ScoreManager>(context).populateGames();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: ListView.builder(
-        itemCount: 1,
-        padding: const EdgeInsets.all(10.0),
-        itemBuilder: (context, i) {
-          return MatchCard(
-            game: Game(
-                homeTeam: Team(
-                  "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
-                  "WSH",
-                ),
-                homeTeamScore: 6,
-                awayTeam: new Team(
-                  "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
-                  "HOU",
-                ),
-                awayTeamScore: 2,
-                matchType: MatchType.Final),
-            isDetails: false,
-          );
-        },
+    return Center(
+      child: Container(
+        child: ScopedModelDescendant<ScoreManager>(
+            builder: (context, child, model) => (model.games.length != 0)
+                ? ListView.builder(
+                    itemCount: model.games.length,
+                    padding: const EdgeInsets.all(10.0),
+                    itemBuilder: (context, i) {
+                      return MatchCard(
+                        game: model.games[i],
+                        isDetails: false,
+                      );
+                    },
+                  )
+                : CircularProgressIndicator()),
       ),
     );
   }
@@ -104,9 +122,11 @@ class MatchCard extends StatelessWidget {
   _navigateToGameDetails(Game game, BuildContext context) {
     if (!isDetails) {
       Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (BuildContext context) => MatchDetails(game)));
+        context,
+        new MaterialPageRoute(
+          builder: (BuildContext context) => MatchDetails(game),
+        ),
+      );
     }
   }
 }
@@ -122,7 +142,6 @@ class TeamCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Hero(
         tag: team.teamName,
-        //this will cause issues if i have another card with same team name
         child: Row(
           children: <Widget>[
             Column(
@@ -141,17 +160,68 @@ class TeamCard extends StatelessWidget {
   }
 }
 
-class MatchDetails extends StatelessWidget {
+class MatchDetails extends StatefulWidget {
   Game game;
 
   MatchDetails(this.game);
+
+  @override
+  _MatchDetailsState createState() => _MatchDetailsState();
+}
+
+class _MatchDetailsState extends State<MatchDetails> {
+  List<DataColumn> column = [
+    DataColumn(
+      label: Text(""),
+    ),
+  ];
+
+  List<DataCell> home = [];
+  List<DataCell> away = [];
+
+  @override
+  void initState() {
+    for (int i = 1; i < 10; i++) {
+      column.add(
+        DataColumn(
+          label: Text(i.toString()),
+        ),
+      );
+    }
+
+    home.add(DataCell(Text(widget.game.homeTeam.teamName)));
+    home.addAll(widget.game.homeInnings
+        .map(
+          (val) => DataCell(
+            Text(
+              val.toString(),
+            ),
+          ),
+        )
+        .toList());
+
+    away.add(DataCell(Text(widget.game.awayTeam.teamName)));
+    away.addAll(widget.game.awayInnings
+        .map(
+          (val) => DataCell(
+            Text(
+              val.toString(),
+            ),
+          ),
+        )
+        .toList());
+
+    print(column.length);
+    print(home.length);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "${game.awayTeam.teamName} @ ${game.homeTeam.teamName}",
+          "${widget.game.awayTeam.teamName} @ ${widget.game.homeTeam.teamName}",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -160,8 +230,12 @@ class MatchDetails extends StatelessWidget {
         child: Column(
           children: <Widget>[
             MatchCard(
-              game: game,
+              game: widget.game,
             ),
+            DataTable(
+              columns: column,
+              rows: [DataRow(cells: home), DataRow(cells: away)],
+            )
           ],
         ),
       ),
