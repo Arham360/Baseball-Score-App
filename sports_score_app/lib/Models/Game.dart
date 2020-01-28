@@ -9,9 +9,15 @@ class Game{
   Team awayTeam;
   int awayTeamScore;
   MatchType matchType;
+  Selected selected = Selected.AWAY;
 
   Game({this.homeTeam,this.homeTeamScore, this.awayTeam, this.awayTeamScore, this.matchType,});
 
+}
+
+enum Selected{
+  AWAY,
+  HOME
 }
 
 enum MatchType{

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:sports_score_app/ScoreManager.dart';
 
 import 'Models/Game.dart';
 import 'Models/Team.dart';
@@ -21,8 +23,9 @@ class MyApp extends StatelessWidget {
             "Today's Games".toUpperCase(),
             style: TextStyle(color: Colors.white),
           ),
+          centerTitle: true,
         ),
-        body: HomePage(),
+        body: ScopedModel(model: ScoreManager(), child: HomePage()),
       ),
     );
   }
@@ -37,7 +40,7 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         itemBuilder: (context, i) {
           return MatchCard(
-            game:Game(
+            game: Game(
                 homeTeam: Team(
                   "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
                   "WSH",
@@ -99,12 +102,12 @@ class MatchCard extends StatelessWidget {
   }
 
   _navigateToGameDetails(Game game, BuildContext context) {
-   if(!isDetails){
-     Navigator.push(
-         context,
-         new MaterialPageRoute(
-             builder: (BuildContext context) => MatchDetails(game)));
-   }
+    if (!isDetails) {
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (BuildContext context) => MatchDetails(game)));
+    }
   }
 }
 
@@ -147,11 +150,19 @@ class MatchDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${game.awayTeam.teamName} @ ${game.homeTeam.teamName}"),
+        title: Text(
+          "${game.awayTeam.teamName} @ ${game.homeTeam.teamName}",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: <Widget>[MatchCard(game: game,)],
+          children: <Widget>[
+            MatchCard(
+              game: game,
+            ),
+          ],
         ),
       ),
     );
