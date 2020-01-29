@@ -142,18 +142,20 @@ class TeamCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Hero(
         tag: team.teamName,
-        child: Row(
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Image.network(
-                  team.imageUrl,
-                  height: MediaQuery.of(context).size.width * 0.20,
-                ),
-                Text(team.teamName)
-              ],
-            ),
-          ],
+        child: Material(
+          child: Row(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Image.network(
+                    team.imageUrl,
+                    height: MediaQuery.of(context).size.width * 0.20,
+                  ),
+                  Text(team.teamName)
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -267,6 +269,8 @@ class _MatchDetailsState extends State<MatchDetails> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: DataTable(
+                columnSpacing: 10,
+                horizontalMargin: 1,
                 columns: column,
                 rows: [DataRow(cells: home), DataRow(cells: away)],
               ),
