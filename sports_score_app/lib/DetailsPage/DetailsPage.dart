@@ -116,10 +116,30 @@ class _MatchDetailsState extends State<MatchDetails> {
                 columns: column,
                 rows: [DataRow(cells: home), DataRow(cells: away)],
               ),
-            )
+            ),
+
+            ScoreSwitcher()
+
           ],
         ),
       ),
     );
   }
+}
+
+class ScoreSwitcher extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        //segmented controller? can it get the shape they want?
+
+        //OR
+
+        //row with 2 buttons?
+        //2 animated switcher that has 2 data tables
+      ],
+    );
+  }
+
 }
