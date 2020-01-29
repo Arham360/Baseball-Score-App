@@ -20,7 +20,8 @@ class ScoreManager extends Model {
     print(liveData);
     //hard code team names for now?
 
-    var inningsResponse = await http.get("https://statsapi.mlb.com/api/v1/game/531060/linescore");
+    var inningsResponse =
+        await http.get("https://statsapi.mlb.com/api/v1/game/531060/linescore");
     var inningsJson = jsonDecode(inningsResponse.body);
     var inningsData = inningsJson["innings"];
     //print(inningsData);
@@ -31,10 +32,10 @@ class ScoreManager extends Model {
     List<int> homeStats = List();
     List<int> awayStats = List();
 
-    for(var i in inningsData){
+    for (var i in inningsData) {
       //might be worth it to have a map to correspond with the innings values
-      var homeRuns = i["home"]["runs"]??0;
-      var awayRuns = i["away"]["runs"]??0;
+      var homeRuns = i["home"]["runs"] ?? 0;
+      var awayRuns = i["away"]["runs"] ?? 0;
       homeInnings.add(homeRuns);
       awayInnings.add(awayRuns);
     }
@@ -50,40 +51,29 @@ class ScoreManager extends Model {
 
     TeamStats home = TeamStats(
         team: Team(
-    "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
-    "WSH",
-    ),
-    teamScore: liveData["home"]["runs"] as int,
-    innings: homeInnings,
-    runsHitsErrors: homeStats
-    );
+          "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
+          "WSH",
+        ),
+        teamScore: liveData["home"]["runs"] as int,
+        innings: homeInnings,
+        runsHitsErrors: homeStats);
 
     TeamStats away = TeamStats(
-    team: Team(
-    "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
-    "HOU",
-    ),
-    teamScore: liveData["away"]["runs"] as int,
-    innings: awayInnings,
-    runsHitsErrors: awayStats
-    );
+        team: Team(
+          "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
+          "HOU",
+        ),
+        teamScore: liveData["away"]["runs"] as int,
+        innings: awayInnings,
+        runsHitsErrors: awayStats);
 
-    Game game = Game(
-    away: away,
-        home: home,
-
-        matchType: MatchType.Final);
+    Game game = Game(away: away, home: home, matchType: MatchType.Final);
     //add into games and notify listeners
     games.add(game);
     notifyListeners();
   }
-
 }
 
-class GameManager extends Model{
-
+class GameManager extends Model {
   Game game;
-
-
-
 }

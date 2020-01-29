@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sports_score_app/Models/Game.dart';
@@ -56,40 +55,40 @@ class _MatchDetailsState extends State<MatchDetails> {
     home.addAll(widget.game.home.innings
         .map(
           (val) => DataCell(
-        Text(
-          val.toString(),
-        ),
-      ),
-    )
+            Text(
+              val.toString(),
+            ),
+          ),
+        )
         .toList());
     home.addAll(widget.game.home.runsHitsErrors
         .map(
           (val) => DataCell(
-        Text(
-          val.toString(),
-        ),
-      ),
-    )
+            Text(
+              val.toString(),
+            ),
+          ),
+        )
         .toList());
 
     away.add(DataCell(Text(widget.game.away.team.teamName)));
     away.addAll(widget.game.away.innings
         .map(
           (val) => DataCell(
-        Text(
-          val.toString(),
-        ),
-      ),
-    )
+            Text(
+              val.toString(),
+            ),
+          ),
+        )
         .toList());
     away.addAll(widget.game.away.runsHitsErrors
         .map(
           (val) => DataCell(
-        Text(
-          val.toString(),
-        ),
-      ),
-    )
+            Text(
+              val.toString(),
+            ),
+          ),
+        )
         .toList());
 
     super.initState();
@@ -111,11 +110,9 @@ class _MatchDetailsState extends State<MatchDetails> {
             MatchCard(
               game: widget.game,
             ),
-
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.05,
             ),
-
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: DataTable(
@@ -125,13 +122,10 @@ class _MatchDetailsState extends State<MatchDetails> {
                 rows: [DataRow(cells: home), DataRow(cells: away)],
               ),
             ),
-
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.05,
             ),
-
             ScoreSwitcher(widget.game)
-
           ],
         ),
       ),
@@ -139,8 +133,7 @@ class _MatchDetailsState extends State<MatchDetails> {
   }
 }
 
-class ScoreSwitcher extends StatefulWidget{
-
+class ScoreSwitcher extends StatefulWidget {
   Game game;
 
   ScoreSwitcher(this.game);
@@ -159,6 +152,9 @@ class _ScoreSwitcherState extends State<ScoreSwitcher> {
         //segmented controller? can it get the shape they want?
 
         CupertinoSegmentedControl(
+          padding: EdgeInsets.symmetric(horizontal: 40),
+          selectedColor: Colors.black,
+          unselectedColor: Colors.white,
           children: {
             0: Text("AWAY"),
             1: Text("HOME"),
@@ -169,7 +165,9 @@ class _ScoreSwitcherState extends State<ScoreSwitcher> {
           },
         ),
 
-        _selectedIndexValue == 0 ? ScoreTable(widget.game.home) : ScoreTable(widget.game.away)
+        _selectedIndexValue == 0
+            ? ScoreTable(widget.game.home)
+            : ScoreTable(widget.game.away)
 
         //OR
 
@@ -180,8 +178,7 @@ class _ScoreSwitcherState extends State<ScoreSwitcher> {
   }
 }
 
-class ScoreTable extends StatelessWidget{
-
+class ScoreTable extends StatelessWidget {
   TeamStats teamStats;
 
   ScoreTable(this.teamStats);
@@ -189,7 +186,23 @@ class ScoreTable extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(teamStats.team.teamName),
+      child: Column(
+        children: <Widget>[
+
+          Text("Hitting"),
+
+          //data table for hitters
+
+          SizedBox(
+            height: 100,
+          ),
+
+          Text("Pitching"),
+
+          // data table for pitchers
+
+        ],
+      ),
     );
   }
 }
