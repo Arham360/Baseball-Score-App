@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sports_score_app/Models/Game.dart';
 import 'package:sports_score_app/Models/Team.dart';
+import 'package:sports_score_app/Models/TeamStats.dart';
 
 import '../main.dart';
 
@@ -51,8 +52,8 @@ class _MatchDetailsState extends State<MatchDetails> {
       ),
     );
 
-    home.add(DataCell(Text(widget.game.homeTeam.teamName)));
-    home.addAll(widget.game.homeInnings
+    home.add(DataCell(Text(widget.game.home.team.teamName)));
+    home.addAll(widget.game.home.innings
         .map(
           (val) => DataCell(
         Text(
@@ -61,7 +62,7 @@ class _MatchDetailsState extends State<MatchDetails> {
       ),
     )
         .toList());
-    home.addAll(widget.game.homeStats
+    home.addAll(widget.game.home.runsHitsErrors
         .map(
           (val) => DataCell(
         Text(
@@ -71,8 +72,8 @@ class _MatchDetailsState extends State<MatchDetails> {
     )
         .toList());
 
-    away.add(DataCell(Text(widget.game.awayTeam.teamName)));
-    away.addAll(widget.game.awayInnings
+    away.add(DataCell(Text(widget.game.away.team.teamName)));
+    away.addAll(widget.game.away.innings
         .map(
           (val) => DataCell(
         Text(
@@ -81,7 +82,7 @@ class _MatchDetailsState extends State<MatchDetails> {
       ),
     )
         .toList());
-    away.addAll(widget.game.awayStats
+    away.addAll(widget.game.away.runsHitsErrors
         .map(
           (val) => DataCell(
         Text(
@@ -99,7 +100,7 @@ class _MatchDetailsState extends State<MatchDetails> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "${widget.game.awayTeam.teamName} @ ${widget.game.homeTeam.teamName}",
+          "${widget.game.away.team.teamName} @ ${widget.game.home.team.teamName}",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -168,7 +169,7 @@ class _ScoreSwitcherState extends State<ScoreSwitcher> {
           },
         ),
 
-        _selectedIndexValue == 0 ? ScoreTable(widget.game.homeTeam) : ScoreTable(widget.game.awayTeam)
+        _selectedIndexValue == 0 ? ScoreTable(widget.game.home) : ScoreTable(widget.game.away)
 
         //OR
 
@@ -181,14 +182,14 @@ class _ScoreSwitcherState extends State<ScoreSwitcher> {
 
 class ScoreTable extends StatelessWidget{
 
-  Team team;
+  TeamStats teamStats;
 
-  ScoreTable(this.team);
+  ScoreTable(this.teamStats);
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(team.teamName),
+      child: Text(teamStats.team.teamName),
     );
   }
 }

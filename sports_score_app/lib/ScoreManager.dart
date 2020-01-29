@@ -1,4 +1,5 @@
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sports_score_app/Models/TeamStats.dart';
 import 'dart:convert';
 import 'Models/Game.dart';
 import 'package:http/http.dart' as http;
@@ -47,24 +48,30 @@ class ScoreManager extends Model {
     awayStats.add(teamsData["away"]["hits"]);
     awayStats.add(teamsData["away"]["errors"]);
 
-    print(homeInnings.toString());
-    print(awayInnings.toString());
+    TeamStats home = TeamStats(
+        team: Team(
+    "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
+    "WSH",
+    ),
+    teamScore: liveData["home"]["runs"] as int,
+    innings: homeInnings,
+    runsHitsErrors: homeStats
+    );
+
+    TeamStats away = TeamStats(
+    team: Team(
+    "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
+    "HOU",
+    ),
+    teamScore: liveData["away"]["runs"] as int,
+    innings: awayInnings,
+    runsHitsErrors: awayStats
+    );
 
     Game game = Game(
-        homeTeam: Team(
-          "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
-          "WSH",
-        ),
-        homeTeamScore: liveData["home"]["runs"] as int,
-        homeInnings: homeInnings,
-        homeStats: homeStats,
-        awayTeam: new Team(
-          "https://a2.espncdn.com/combiner/i?img=%2Fi%2Fteamlogos%2Fnfl%2F500%2Fgb.png",
-          "HOU",
-        ),
-        awayTeamScore: liveData["away"]["runs"] as int,
-        awayInnings: awayInnings,
-        awayStats: awayStats,
+    away: away,
+        home: home,
+
         matchType: MatchType.Final);
     //add into games and notify listeners
     games.add(game);

@@ -115,19 +115,19 @@ class MatchCard extends StatelessWidget {
           duration: Duration(seconds: 1),
           child: Row(
             children: <Widget>[
-              TeamCard(game.awayTeam),
+              TeamCard(game.away.team),
               Text(
-                game.awayTeamScore.toString(),
+                game.away.teamScore.toString(),
                 style: TextStyle(fontSize: 28,color: Colors.white),
               ),
               Spacer(),
               Text((game.matchType == MatchType.Final) ? "FINAL" : "Regular", style: TextStyle(color: Colors.white, fontSize: 40),),
               Spacer(),
               Text(
-                game.homeTeamScore.toString(),
+                game.home.teamScore.toString(),
                 style: TextStyle(fontSize: 28,color: Colors.white),
               ),
-              TeamCard(game.homeTeam),
+              TeamCard(game.home.team),
             ],
           ),
         ),

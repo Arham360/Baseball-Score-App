@@ -1,27 +1,16 @@
 
 
 import 'package:sports_score_app/Models/Team.dart';
+import 'package:sports_score_app/Models/TeamStats.dart';
 
 class Game{
 
-  Team homeTeam;
-  int homeTeamScore;
-  List<int> homeInnings;
-  List<int> homeStats;//score needs to turned into its own struct
-  Team awayTeam;
-  int awayTeamScore;
-  List<int> awayInnings;
-  List<int> awayStats;
+  TeamStats home;
+  TeamStats away;
   MatchType matchType;
-  Selected selected = Selected.AWAY;
 
-  Game({this.homeTeam,this.homeTeamScore, this.homeInnings, this.awayTeam, this.awayTeamScore,this.awayInnings, this.matchType, this.homeStats, this.awayStats});
+  Game({this.home, this.away, this.matchType,});
 
-}
-
-enum Selected{
-  AWAY,
-  HOME
 }
 
 enum MatchType{
