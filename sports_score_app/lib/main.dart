@@ -19,18 +19,27 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
-        home: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Today's Games".toUpperCase(),
-              style: TextStyle(color: Colors.white),
-            ),
-            centerTitle: true,
-          ),
-          body: HomePage(),
-          floatingActionButton:
-              FloatingActionButton(onPressed: () => _refresh(context)),
+        home: HomeScreen()
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Today's Games".toUpperCase(),
+          style: TextStyle(color: Colors.white),
         ),
+        centerTitle: true,
+      ),
+      body: HomePage(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _refresh(context),
+        child: Icon(Icons.refresh),
       ),
     );
   }
@@ -39,6 +48,7 @@ class MyApp extends StatelessWidget {
     await ScopedModel.of<ScoreManager>(context).populateGames();
   }
 }
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -86,6 +96,10 @@ class MatchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Color> colors = List();
+    colors.addAll(game.home.team.teamColors);
+    colors.addAll(game.away.team.teamColors);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
@@ -101,16 +115,9 @@ class MatchCard extends StatelessWidget {
                   0.6,
                   0.9
                 ],
-                colors: [
-                  Color(0XFFFDC701),
-                  Color(0XFFFF7747),
-                  Color(0XFFFD4848),
-                  Color(0XFF530433),
-                ]),
-            border: Border.all(
-              width: 1,
-              color: Colors.black
-            ),
+                colors: colors),
+            borderRadius: new BorderRadius.circular(25.0),
+            border: Border.all(width: 1, color: Colors.black),
           ),
           duration: Duration(seconds: 1),
           child: Row(
@@ -118,14 +125,17 @@ class MatchCard extends StatelessWidget {
               TeamCard(game.away.team),
               Text(
                 game.away.teamScore.toString(),
-                style: TextStyle(fontSize: 28,color: Colors.white),
+                style: TextStyle(fontSize: 28, color: Colors.white),
               ),
               Spacer(),
-              Text((game.matchType == MatchType.Final) ? "FINAL" : "Regular", style: TextStyle(color: Colors.white, fontSize: 40),),
+              Text(
+                (game.matchType == MatchType.Final) ? "FINAL" : "Placeholder",
+                style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width * 0.05),
+              ),
               Spacer(),
               Text(
                 game.home.teamScore.toString(),
-                style: TextStyle(fontSize: 28,color: Colors.white),
+                style: TextStyle(fontSize: 30, color: Colors.white),
               ),
               TeamCard(game.home.team),
             ],
@@ -162,18 +172,21 @@ class TeamCard extends StatelessWidget {
           children: <Widget>[
             Column(
               children: <Widget>[
-                Image.network(
-                  team.imageUrl,
-                  height: MediaQuery.of(context).size.width * 0.20,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.network(
+                    team.imageUrl,
+                    height: MediaQuery.of(context).size.width * 0.20,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Material(
-                    color: Colors.transparent,
+                      color: Colors.transparent,
                       child: Text(
-                    team.teamName,
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  )),
+                        team.teamName,
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      )),
                 )
               ],
             ),
@@ -183,4 +196,3 @@ class TeamCard extends StatelessWidget {
     );
   }
 }
-

@@ -7,7 +7,7 @@ class Game{
 
   TeamStats home;
   TeamStats away;
-  MatchType matchType;
+  MatchType matchType = MatchType.Regular;
 
   Game({this.home, this.away, this.matchType,});
 
