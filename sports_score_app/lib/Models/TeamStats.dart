@@ -8,7 +8,9 @@ class TeamStats {
   List<int> innings;
   List<int> runsHitsErrors;
 
+  //todo add a map of players and a data structure(individual scores)
+
   TeamStats({this.team, this.teamScore, this.innings,
-      this.runsHitsErrors}); //score needs to turned into its own struct
+      this.runsHitsErrors});
 
 }

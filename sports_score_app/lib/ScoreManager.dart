@@ -29,14 +29,13 @@ class ScoreManager extends Model {
     notifyListeners();
   }
 
-  Future<Game> generateGameFromLiveData(liveData)async {
+  Future<Game> generateGameFromLiveData(liveData) async {
     //json serializable is probably better but the generate command is having issues right now
 
     var inningsResponse =
         await http.get("https://statsapi.mlb.com/api/v1/game/531060/linescore");
     var inningsJson = jsonDecode(inningsResponse.body);
     var inningsData = inningsJson["innings"];
-
 
     List<int> homeInnings = List();
     List<int> awayInnings = List();
@@ -63,10 +62,10 @@ class ScoreManager extends Model {
     //hard code team names for now?
     TeamStats home = TeamStats(
         team: Team(
-          imageUrl:"https://upload.wikimedia.org/wikipedia/en/thumb/a/a3/Washington_Nationals_logo.svg/1200px-Washington_Nationals_logo.svg.png",
+          imageUrl:
+              "https://upload.wikimedia.org/wikipedia/en/thumb/a/a3/Washington_Nationals_logo.svg/1200px-Washington_Nationals_logo.svg.png",
           teamName: "WSH",
-          teamColors: [Color(0XFFFDC701),
-            Color(0XFFFF7747)],
+          teamColors: [Color(0XFFFDC701), Color(0XFFFF7747)],
         ),
         teamScore: liveData["home"]["runs"] as int,
         innings: homeInnings,
@@ -74,12 +73,13 @@ class ScoreManager extends Model {
 
     TeamStats away = TeamStats(
         team: Team(
-            imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Houston-Astros-Logo.svg/1200px-Houston-Astros-Logo.svg.png",
-            teamName: "HOU",
-            teamColors:[
-              Color(0XFFFD4848),
-              Color(0XFF530433),
-            ]
+          imageUrl:
+              "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Houston-Astros-Logo.svg/1200px-Houston-Astros-Logo.svg.png",
+          teamName: "HOU",
+          teamColors: [
+            Color(0XFFFD4848),
+            Color(0XFF530433),
+          ],
         ),
         teamScore: liveData["away"]["runs"] as int,
         innings: awayInnings,
@@ -88,9 +88,6 @@ class ScoreManager extends Model {
     Game game = Game(away: away, home: home, matchType: MatchType.Final);
     return game;
   }
-
-
-
 }
 
 class GameManager extends Model {

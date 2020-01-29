@@ -7,7 +7,9 @@ import 'DetailsPage/DetailsPage.dart';
 import 'Models/Game.dart';
 import 'Models/Team.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(
+      MyApp(),
+    );
 
 class MyApp extends StatelessWidget {
   @override
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
-        home: HomeScreen()
+        home: HomeScreen(),
       ),
     );
   }
@@ -49,7 +51,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -71,18 +72,19 @@ class _HomePageState extends State<HomePage> {
     return Center(
       child: Container(
         child: ScopedModelDescendant<ScoreManager>(
-            builder: (context, child, model) => (model.games.length != 0)
-                ? ListView.builder(
-                    itemCount: model.games.length,
-                    padding: const EdgeInsets.all(10.0),
-                    itemBuilder: (context, i) {
-                      return MatchCard(
-                        game: model.games[i],
-                        isDetails: false,
-                      );
-                    },
-                  )
-                : CircularProgressIndicator()),
+          builder: (context, child, model) => (model.games.length != 0)
+              ? ListView.builder(
+                  itemCount: model.games.length,
+                  padding: const EdgeInsets.all(10.0),
+                  itemBuilder: (context, i) {
+                    return MatchCard(
+                      game: model.games[i],
+                      isDetails: false,
+                    );
+                  },
+                )
+              : CircularProgressIndicator(),
+        ),
       ),
     );
   }
@@ -109,12 +111,7 @@ class MatchCard extends StatelessWidget {
             gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                stops: [
-                  0.1,
-                  0.4,
-                  0.6,
-                  0.9
-                ],
+                stops: [0.1, 0.4, 0.6, 0.9],
                 colors: colors),
             borderRadius: new BorderRadius.circular(25.0),
             border: Border.all(width: 1, color: Colors.black),
@@ -130,7 +127,9 @@ class MatchCard extends StatelessWidget {
               Spacer(),
               Text(
                 (game.matchType == MatchType.Final) ? "FINAL" : "Placeholder",
-                style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width * 0.05),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: MediaQuery.of(context).size.width * 0.05),
               ),
               Spacer(),
               Text(
@@ -182,11 +181,12 @@ class TeamCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Material(
-                      color: Colors.transparent,
-                      child: Text(
-                        team.teamName,
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      )),
+                    color: Colors.transparent,
+                    child: Text(
+                      team.teamName,
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
                 )
               ],
             ),

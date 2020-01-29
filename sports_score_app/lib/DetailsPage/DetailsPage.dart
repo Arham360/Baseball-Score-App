@@ -31,7 +31,9 @@ class _MatchDetailsState extends State<MatchDetails> {
     for (int i = 1; i < 10; i++) {
       column.add(
         DataColumn(
-          label: Text(i.toString()),
+          label: Text(
+            i.toString(),
+          ),
         ),
       );
     }
@@ -51,45 +53,61 @@ class _MatchDetailsState extends State<MatchDetails> {
       ),
     );
 
-    home.add(DataCell(Text(widget.game.home.team.teamName)));
-    home.addAll(widget.game.home.innings
-        .map(
-          (val) => DataCell(
-            Text(
-              val.toString(),
+    home.add(
+      DataCell(
+        Text(widget.game.home.team.teamName),
+      ),
+    );
+    home.addAll(
+      widget.game.home.innings
+          .map(
+            (val) => DataCell(
+              Text(
+                val.toString(),
+              ),
             ),
-          ),
-        )
-        .toList());
-    home.addAll(widget.game.home.runsHitsErrors
-        .map(
-          (val) => DataCell(
-            Text(
-              val.toString(),
+          )
+          .toList(),
+    );
+    home.addAll(
+      widget.game.home.runsHitsErrors
+          .map(
+            (val) => DataCell(
+              Text(
+                val.toString(),
+              ),
             ),
-          ),
-        )
-        .toList());
+          )
+          .toList(),
+    );
 
-    away.add(DataCell(Text(widget.game.away.team.teamName)));
-    away.addAll(widget.game.away.innings
-        .map(
-          (val) => DataCell(
-            Text(
-              val.toString(),
+    away.add(
+      DataCell(
+        Text(widget.game.away.team.teamName),
+      ),
+    );
+    away.addAll(
+      widget.game.away.innings
+          .map(
+            (val) => DataCell(
+              Text(
+                val.toString(),
+              ),
             ),
-          ),
-        )
-        .toList());
-    away.addAll(widget.game.away.runsHitsErrors
-        .map(
-          (val) => DataCell(
-            Text(
-              val.toString(),
+          )
+          .toList(),
+    );
+    away.addAll(
+      widget.game.away.runsHitsErrors
+          .map(
+            (val) => DataCell(
+              Text(
+                val.toString(),
+              ),
             ),
-          ),
-        )
-        .toList());
+          )
+          .toList(),
+    );
 
     super.initState();
   }
@@ -188,7 +206,6 @@ class ScoreTable extends StatelessWidget {
     return Center(
       child: Column(
         children: <Widget>[
-
           Text("Hitting"),
 
           //data table for hitters
@@ -200,7 +217,6 @@ class ScoreTable extends StatelessWidget {
           Text("Pitching"),
 
           // data table for pitchers
-
         ],
       ),
     );
