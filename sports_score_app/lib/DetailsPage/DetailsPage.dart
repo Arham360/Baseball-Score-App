@@ -1,6 +1,8 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sports_score_app/Models/Game.dart';
+import 'package:sports_score_app/Models/Team.dart';
 
 import '../main.dart';
 
@@ -108,6 +110,11 @@ class _MatchDetailsState extends State<MatchDetails> {
             MatchCard(
               game: widget.game,
             ),
+
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.05,
+            ),
+
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: DataTable(
@@ -118,7 +125,11 @@ class _MatchDetailsState extends State<MatchDetails> {
               ),
             ),
 
-            ScoreSwitcher()
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.05,
+            ),
+
+            ScoreSwitcher(widget.game)
 
           ],
         ),
@@ -127,12 +138,37 @@ class _MatchDetailsState extends State<MatchDetails> {
   }
 }
 
-class ScoreSwitcher extends StatelessWidget{
+class ScoreSwitcher extends StatefulWidget{
+
+  Game game;
+
+  ScoreSwitcher(this.game);
+
+  @override
+  _ScoreSwitcherState createState() => _ScoreSwitcherState();
+}
+
+class _ScoreSwitcherState extends State<ScoreSwitcher> {
+  int _selectedIndexValue = 0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         //segmented controller? can it get the shape they want?
+
+        CupertinoSegmentedControl(
+          children: {
+            0: Text("AWAY"),
+            1: Text("HOME"),
+          },
+          groupValue: _selectedIndexValue,
+          onValueChanged: (value) {
+            setState(() => _selectedIndexValue = value);
+          },
+        ),
+
+        _selectedIndexValue == 0 ? ScoreTable(widget.game.homeTeam) : ScoreTable(widget.game.awayTeam)
 
         //OR
 
@@ -141,5 +177,18 @@ class ScoreSwitcher extends StatelessWidget{
       ],
     );
   }
+}
 
+class ScoreTable extends StatelessWidget{
+
+  Team team;
+
+  ScoreTable(this.team);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(team.teamName),
+    );
+  }
 }
