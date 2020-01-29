@@ -92,8 +92,24 @@ class MatchCard extends StatelessWidget {
         onTap: () => _navigateToGameDetails(game, context),
         child: AnimatedContainer(
           decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: [
+                  0.1,
+                  0.4,
+                  0.6,
+                  0.9
+                ],
+                colors: [
+                  Color(0XFFFDC701),
+                  Color(0XFFFF7747),
+                  Color(0XFFFD4848),
+                  Color(0XFF530433),
+                ]),
             border: Border.all(
-              width: 1, //
+              width: 1,
+              color: Colors.black
             ),
           ),
           duration: Duration(seconds: 1),
@@ -102,14 +118,14 @@ class MatchCard extends StatelessWidget {
               TeamCard(game.awayTeam),
               Text(
                 game.awayTeamScore.toString(),
-                style: TextStyle(fontSize: 28),
+                style: TextStyle(fontSize: 28,color: Colors.white),
               ),
               Spacer(),
-              Text((game.matchType == MatchType.Final) ? "FINAL" : "Regular"),
+              Text((game.matchType == MatchType.Final) ? "FINAL" : "Regular", style: TextStyle(color: Colors.white, fontSize: 40),),
               Spacer(),
               Text(
                 game.homeTeamScore.toString(),
-                style: TextStyle(fontSize: 28),
+                style: TextStyle(fontSize: 28,color: Colors.white),
               ),
               TeamCard(game.homeTeam),
             ],
@@ -142,20 +158,26 @@ class TeamCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Hero(
         tag: team.teamName,
-        child: Material(
-          child: Row(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Image.network(
-                    team.imageUrl,
-                    height: MediaQuery.of(context).size.width * 0.20,
-                  ),
-                  Text(team.teamName)
-                ],
-              ),
-            ],
-          ),
+        child: Row(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Image.network(
+                  team.imageUrl,
+                  height: MediaQuery.of(context).size.width * 0.20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Material(
+                    color: Colors.transparent,
+                      child: Text(
+                    team.teamName,
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  )),
+                )
+              ],
+            ),
+          ],
         ),
       ),
     );
