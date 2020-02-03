@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sports_score_app/Models/TeamStats.dart';
 import 'Models/Game.dart';
 import 'dart:convert';
 
@@ -8,7 +11,10 @@ class GameManager extends Model{
 
   Game game;
 
+  bool isLoading;
+
   init(Game g){
+    isLoading = true;
     game = g;
     notifyListeners();
 
@@ -25,30 +31,45 @@ class GameManager extends Model{
     var teamsUrl = "https://statsapi.mlb.com/api/v1/game/599342/boxscore?fields=teams,record,wins,losses,players,fullName,position,name,type,abbreviation,stats,batting,doubles,triples,homeRuns,strikeOuts,fielding,assists,errors,putOuts,pitching,runs,atBats,hits,rbi,inningsPitched,strikeOuts";
 
     var response = await http.get(teamsUrl);
-    var data = jsonDecode(response.body);
-    print("hi");
+    var data = jsonDecode(response.body)["teams"];
 
-    var awayHitters = data["teams"]["away"]["batters"];
-    game.away.hitters = awayHitters;
+    var awayHitters = data["away"]["batters"] as List;
+    List<Player> tags = awayHitters != null ? awayHitters.map((i) => Player(i)).toList() : null;
+    game.away.hitters = tags;
 
-    var awayPitchers = data["teams"]["away"]["pitchers"];
-    game.away.pitchers = awayPitchers;
+    game.away.hitters.forEach((element) {
+      var pData = data["away"]["players"]["ID${element.id}"]["stats"];
+      element.runs = pData["runs"];
+      element.hits = pData["hits"];
+      element.ab = pData["atBats"];
+      element.rbi = pData["rbi"];
+    });
 
-    var homeHitters = data["teams"]["home"]["batters"];
-    game.home.hitters = homeHitters;
+    var awayPitchers = data["away"]["pitchers"] as List<int>;
+    tags = awayHitters != null ? awayPitchers.map((i) => Player(i)).toList() : null;
+    game.away.pitchers = tags;
 
-    var homePitchers = data["teams"]["home"]["pitchers"];
-    game.home.hitters = homePitchers;
+    var homeHitters = data["home"]["batters"]as List<int>;
+    tags = awayHitters != null ? homeHitters.map((i) => Player(i)).toList() : null;
+    game.home.hitters = tags;
 
-    game.home.team.teamName = "butt";
+    game.home.hitters.forEach((element) {
+      var pData = data["home"]["players"]["ID${element.id}"]["stats"];
+      element.runs = pData["runs"];
+      element.hits = pData["hits"];
+      element.ab = pData["atBats"];
+      element.rbi = pData["rbi"];
+    });
 
-    print(awayHitters.toString());
-    print(awayPitchers.toString());
-    print(homeHitters.toString());
-    print(homePitchers.toString());
+    var homePitchers = data["home"]["pitchers"]as List<int>;
+    tags = awayHitters != null ? homePitchers.map((i) => Player(i)).toList() : null;
+    game.home.pitchers = tags;
 
+
+
+    isLoading = false;
     notifyListeners();
-
   }
+
 
 }

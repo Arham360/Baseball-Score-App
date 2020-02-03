@@ -127,7 +127,7 @@ class _MatchDetailsState extends State<MatchDetails> {
                 ),
                 centerTitle: true,
               ),
-              body: SingleChildScrollView(
+              body: (model.isLoading) ? Center(child: CircularProgressIndicator()) : SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
                     MatchCard(
@@ -155,8 +155,8 @@ class _MatchDetailsState extends State<MatchDetails> {
             ));
   }
 
-  void initializeGameManager() async {
-    await ScopedModel.of<GameManager>(context).init(widget.game);
+  void initializeGameManager() {
+     ScopedModel.of<GameManager>(context).init(widget.game);
   }
 }
 
@@ -254,14 +254,16 @@ class ScoreTable extends StatelessWidget {
   }
 }
 
-class HittersTable extends StatelessWidget {
-  List<String> hitters;
+class HittersTable extends StatefulWidget {
+  List<Player> hitters;
 
   HittersTable(this.hitters);
 
-  //can i reuse this widget for pitchers too???
-  //i could but i should have 2 seperate widgets just incase in the future there needs to be more variance between hitting/pitching
+  @override
+  _HittersTableState createState() => _HittersTableState();
+}
 
+class _HittersTableState extends State<HittersTable> {
   @override
   Widget build(BuildContext context) {
     return DataTable(
@@ -282,7 +284,7 @@ class HittersTable extends StatelessWidget {
           label: Text("RBI"),
         ),
       ],
-      rows: hitters.map(
+      rows: widget.hitters.map(
         (val) => DataRow(
           cells: [
             DataCell(Row(
@@ -292,7 +294,7 @@ class HittersTable extends StatelessWidget {
                   child: FadeInImage.assetNetwork(
                       placeholder: "assets/loader.png",
                       image:
-                          "https://content.mlb.com/images/headshots/current/60x60/$val@3x.png"),
+                          "https://content.mlb.com/images/headshots/current/60x60/${val.id}@3x.png"),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -301,13 +303,13 @@ class HittersTable extends StatelessWidget {
                 )
               ],
             )),
-            DataCell(Text("4")),
-            DataCell(Text("0")),
-            DataCell(Text("0")),
-            DataCell(Text("0")),
+            DataCell(Text(val.ab.toString())),
+            DataCell(Text(val.runs.toString())),
+            DataCell(Text(val.hits.toString())),
+            DataCell(Text(val.rbi.toString())),
           ],
         ),
-      ),
+      ).toList(),
     );
   }
 }
