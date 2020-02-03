@@ -90,6 +90,3 @@ class ScoreManager extends Model {
   }
 }
 
-class GameManager extends Model {
-  Game game;
-}

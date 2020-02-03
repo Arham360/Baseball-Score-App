@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:sports_score_app/Models/Game.dart';
 import 'package:sports_score_app/Models/Team.dart';
 import 'package:sports_score_app/Models/TeamStats.dart';
 
+import '../GameManager.dart';
 import '../main.dart';
 
 class MatchDetails extends StatefulWidget {
@@ -23,6 +25,8 @@ class _MatchDetailsState extends State<MatchDetails> {
 
   @override
   void initState() {
+    initializeGameManager();
+
     column.add(
       DataColumn(
         label: Text(""),
@@ -114,40 +118,45 @@ class _MatchDetailsState extends State<MatchDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "${widget.game.away.team.teamName} @ ${widget.game.home.team.teamName}",
-          style: TextStyle(color: Colors.white),
-        ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            MatchCard(
-              game: widget.game,
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.05,
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                columnSpacing: 10,
-                horizontalMargin: 1,
-                columns: column,
-                rows: [DataRow(cells: home), DataRow(cells: away)],
+    return ScopedModelDescendant<GameManager>(
+        builder: (context, child, model) => Scaffold(
+              appBar: AppBar(
+                title: Text(
+                  "${model.game.away.team.teamName} @ ${model.game.home.team.teamName}",
+                  style: TextStyle(color: Colors.white),
+                ),
+                centerTitle: true,
               ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.05,
-            ),
-            ScoreSwitcher(widget.game)
-          ],
-        ),
-      ),
-    );
+              body: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    MatchCard(
+                      game: model.game,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columnSpacing: 10,
+                        horizontalMargin: 1,
+                        columns: column,
+                        rows: [DataRow(cells: home), DataRow(cells: away)],
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    ScoreSwitcher(model.game)
+                  ],
+                ),
+              ),
+            ));
+  }
+
+  void initializeGameManager() async {
+    await ScopedModel.of<GameManager>(context).init(widget.game);
   }
 }
 
@@ -206,12 +215,12 @@ class ScoreTable extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-
         Padding(
           padding: const EdgeInsets.all(18.0),
-          child: Text("Hitting", style: TextStyle(
-            fontSize: 30
-          ),),
+          child: Text(
+            "Hitting",
+            style: TextStyle(fontSize: 30),
+          ),
         ),
 
         Container(
@@ -220,15 +229,15 @@ class ScoreTable extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.9,
         ),
 
-
         //data table for hitters
-        HittersTable(),
-        
+        (teamStats.hitters.length != 0) ? HittersTable(teamStats.hitters) : CircularProgressIndicator(),
+
         Padding(
           padding: const EdgeInsets.all(18.0),
-          child: Text("Pitching", style: TextStyle(
-              fontSize: 30
-          ),),
+          child: Text(
+            "Pitching",
+            style: TextStyle(fontSize: 30),
+          ),
         ),
 
         Container(
@@ -238,59 +247,67 @@ class ScoreTable extends StatelessWidget {
         ),
 
         // data table for pitchers
+        Text(teamStats.hitters.toString()),
+        Text(teamStats.pitchers.toString()),
       ],
     );
   }
 }
 
 class HittersTable extends StatelessWidget {
+  List<String> hitters;
+
+  HittersTable(this.hitters);
+
   //can i reuse this widget for pitchers too???
+  //i could but i should have 2 seperate widgets just incase in the future there needs to be more variance between hitting/pitching
+
   @override
   Widget build(BuildContext context) {
-    return DataTable(columns: [
-      DataColumn(
-        label: Text("HITTERS"),
-      ),
-      DataColumn(
-        label: Text("AB"),
-      ),
-      DataColumn(
-        label: Text("R"),
-      ),
-      DataColumn(
-        label: Text("H"),
-      ),
-      DataColumn(
-        label: Text("RBI"),
-      ),
-    ], rows: [
-      
-      DataRow(cells: [
-        
-        DataCell(
-          Row(
-            children: <Widget>[
-              CircleAvatar(
-                backgroundColor: Colors.black,
-                child: Image.network("https://content.mlb.com/images/headshots/current/60x60/605200@3x.png"),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Name"
-                ),
-              )
-            ],
-          )
+    return DataTable(
+      columns: [
+        DataColumn(
+          label: Text("HITTERS"),
         ),
-
-        DataCell(Text("4")),
-        DataCell(Text("0")),
-        DataCell(Text("0")),
-        DataCell(Text("0")),
-        
-      ])
-      
-    ]);
+        DataColumn(
+          label: Text("AB"),
+        ),
+        DataColumn(
+          label: Text("R"),
+        ),
+        DataColumn(
+          label: Text("H"),
+        ),
+        DataColumn(
+          label: Text("RBI"),
+        ),
+      ],
+      rows: hitters.map(
+        (val) => DataRow(
+          cells: [
+            DataCell(Row(
+              children: <Widget>[
+                CircleAvatar(
+                  backgroundColor: Colors.black,
+                  child: FadeInImage.assetNetwork(
+                      placeholder: "assets/loader.png",
+                      image:
+                          "https://content.mlb.com/images/headshots/current/60x60/$val@3x.png"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                      "https://content.mlb.com/images/headshots/current/60x60/605200@3x.png"),
+                )
+              ],
+            )),
+            DataCell(Text("4")),
+            DataCell(Text("0")),
+            DataCell(Text("0")),
+            DataCell(Text("0")),
+          ],
+        ),
+      ),
+    );
   }
 }

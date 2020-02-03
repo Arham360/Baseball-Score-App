@@ -4,6 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sports_score_app/ScoreManager.dart';
 
 import 'DetailsPage/DetailsPage.dart';
+import 'GameManager.dart';
 import 'Models/Game.dart';
 import 'Models/Team.dart';
 
@@ -16,12 +17,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScopedModel(
       model: ScoreManager(),
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-            primaryColor: Colors.black
+      child: ScopedModel(
+        model: GameManager(),
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+              primaryColor: Colors.black
+          ),
+          home: HomeScreen(),
         ),
-        home: HomeScreen(),
       ),
     );
   }
