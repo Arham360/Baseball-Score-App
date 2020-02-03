@@ -178,7 +178,7 @@ class _ScoreSwitcherState extends State<ScoreSwitcher> {
       children: <Widget>[
         //segmented controller? can it get the shape they want?
 
-        CupertinoSegmentedControl(
+        CupertinoSegmentedControl( //todo get rid of this and replace with 2 buttons (away and home) followed by 2 animated switchers that contain hitters and pitchers tables, on change of away or home, just update the table.
           padding: EdgeInsets.symmetric(horizontal: 40),
           selectedColor: Colors.black,
           unselectedColor: Colors.white,
@@ -195,11 +195,13 @@ class _ScoreSwitcherState extends State<ScoreSwitcher> {
         _selectedIndexValue == 0
             ? ScoreTable(widget.game.home)
             : ScoreTable(widget.game.away)
-
-        //OR
+        
 
         //row with 2 buttons?
         //2 animated switcher that has 2 data tables
+        //todo since segmented controller is very rigid, i was going to make my own state management for the switcher
+        //using the game manager scoped model
+
       ],
     );
   }
@@ -247,8 +249,8 @@ class ScoreTable extends StatelessWidget {
         ),
 
         // data table for pitchers
-        Text(teamStats.hitters.toString()),
-        Text(teamStats.pitchers.toString()),
+//        Text(teamStats.hitters.toString()),
+//        Text(teamStats.pitchers.toString()),
       ],
     );
   }

@@ -13,7 +13,9 @@ class GameManager extends Model{
 
   bool isLoading;
 
-  init(Game g){
+  Selected selected;// use to flip between away and home data tables
+
+  init(Game g){ //call when coming into details page
     isLoading = true;
     game = g;
     notifyListeners();
@@ -21,7 +23,7 @@ class GameManager extends Model{
     fetchDetails();
   }
 
-  dispose(){
+  dispose(){//call on will pop scope to clear
     game = null;
     notifyListeners();
   }
@@ -72,4 +74,9 @@ class GameManager extends Model{
   }
 
 
+}
+
+enum Selected{
+  AWAY,
+  HOME
 }
