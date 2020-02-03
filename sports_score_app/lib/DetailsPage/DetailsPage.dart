@@ -203,22 +203,94 @@ class ScoreTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          Text("Hitting"),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
 
-          //data table for hitters
+        Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Text("Hitting", style: TextStyle(
+            fontSize: 30
+          ),),
+        ),
 
-          SizedBox(
-            height: 100,
-          ),
+        Container(
+          color: Colors.black,
+          height: 1,
+          width: MediaQuery.of(context).size.width * 0.9,
+        ),
 
-          Text("Pitching"),
 
-          // data table for pitchers
-        ],
-      ),
+        //data table for hitters
+        HittersTable(),
+        
+        Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Text("Pitching", style: TextStyle(
+              fontSize: 30
+          ),),
+        ),
+
+        Container(
+          color: Colors.black,
+          height: 1,
+          width: MediaQuery.of(context).size.width * 0.9,
+        ),
+
+        // data table for pitchers
+      ],
     );
+  }
+}
+
+class HittersTable extends StatelessWidget {
+  //can i reuse this widget for pitchers too???
+  @override
+  Widget build(BuildContext context) {
+    return DataTable(columns: [
+      DataColumn(
+        label: Text("HITTERS"),
+      ),
+      DataColumn(
+        label: Text("AB"),
+      ),
+      DataColumn(
+        label: Text("R"),
+      ),
+      DataColumn(
+        label: Text("H"),
+      ),
+      DataColumn(
+        label: Text("RBI"),
+      ),
+    ], rows: [
+      
+      DataRow(cells: [
+        
+        DataCell(
+          Row(
+            children: <Widget>[
+              CircleAvatar(
+                backgroundColor: Colors.black,
+                child: Image.network("https://content.mlb.com/images/headshots/current/60x60/605200@3x.png"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Name"
+                ),
+              )
+            ],
+          )
+        ),
+
+        DataCell(Text("4")),
+        DataCell(Text("0")),
+        DataCell(Text("0")),
+        DataCell(Text("0")),
+        
+      ])
+      
+    ]);
   }
 }
